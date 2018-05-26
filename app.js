@@ -1,6 +1,7 @@
 (function(window, document) {
+  'use strict'
   const params = {
-    subdivision: 12,
+    subdivision: 20,
     cx: 120,
     cy: 120
   }
@@ -24,28 +25,59 @@
 
   // Create subdivisions
   for (let i = 1; i < params.subdivision; i++) {
-    const rad = createRadiusByIndex(i, params.subdivision)
+    const rad = createRadiusByIndex(120, 20, i, params.subdivision)
+    console.log(rad)
     appRoot.appendChild(rad)
   }
 
-  function createRadiusByIndex(index, sudivisions) {
-    let x1 = 120
-    let y1 = 20
-    // translate to (0, 0)
-    x1 = x1 - params.cx
-    y1 = y1 - params.cy
-
-    // calculate rotation
+  /**
+   * Create coordinates of a point on circle describing the n-th radius
+   * @param {number} x x-coordinate of first point on circle
+   * @param {number} y y-coordinate of first point on circle
+   * @param {integer} index number of the radius
+   * @param {integer} sudivisions total number of subdivision to draw
+   * @returns {object} a {x, y} object representing coordinate of point on cicrle
+   */
+  function createRadiusByIndex(x, y, index, sudivisions) {
+    // calculate rotation angle
     const baseAngle = 2 * Math.PI / sudivisions
     const angle = index * baseAngle
-    let x2 = x1 * Math.cos(angle) - y1 * Math.sin(angle)
-    let y2 = x1 * Math.sin(angle) + y1 * Math.cos(angle)
 
-    // inverse transation of calculated
-    x2 = x2 + params.cx
-    y2 = y2 + params.cy
+    const translateTo0 = translate.bind(null, { a: -params.cx, b: -params.cy })
+    const translateFrom0 = translate.bind(null, { a: params.cx, b: params.cy })
+    const rotateAngle = rotateFromO.bind(null, angle)
 
-    return createRadius(x2, y2)
+    const point = composeTransformations([
+      translateFrom0,
+      rotateAngle,
+      translateTo0,
+    ], { x, y })
+
+    return createRadius(point.x, point.y)
+  }
+
+  /**
+   * Apply a mathematical composition of functions on a point
+   * @param {Array<function>} functions
+   * @param {object} point as { x, y }
+   */
+  function composeTransformations(functions, point) {
+    console.log(functions)
+    return functions
+      .reverse()
+      .reduce((acc, item) => item(acc), point)
+  }
+
+  function translate({a, b}, {x, y}) {
+
+    return { x: x + a, y: y + b }
+  }
+
+  function rotateFromO(angle, {x, y}) {
+    return {
+      x: x * Math.cos(angle) - y * Math.sin(angle),
+      y: x * Math.sin(angle) + y * Math.cos(angle)
+    }
   }
 
   /**
@@ -53,13 +85,15 @@
    * @param {number} x2 x coordinate of a point on the circle
    * @param {number} y2 y coordinate of a point on the circle
    */
-  function createRadius(x2, y2) {
-    const baseParams = {
+  function createRadius(x, y) {
+    const prms = {
       x1: params.cx,
       y1: params.cy,
+      x2: x,
+      y2: y,
       stroke: 'black'
     }
-    return createSvgElement('line', { ...baseParams, x2, y2 })
+    return createSvgElement('line', prms)
   }
 
   function createSvgElement(tag, attributes) {
