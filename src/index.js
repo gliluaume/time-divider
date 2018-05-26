@@ -1,7 +1,11 @@
 (function(window, document) {
   'use strict'
+  const {
+    compose,
+    rotateFromO,
+    translate } = require('./modules/geometry')
   const params = {
-    subdivision: 20,
+    subdivision: 7,
     cx: 120,
     cy: 120
   }
@@ -46,36 +50,13 @@
     const translateFrom0 = translate.bind(null, { a: params.cx, b: params.cy })
     const rotateAngle = rotateFromO.bind(null, angle)
 
-    const point = composeTransformations([
+    const point = compose([
       translateFrom0,
       rotateAngle,
       translateTo0,
     ], { x, y })
 
     return createRadius(point.x, point.y)
-  }
-
-  /**
-   * Apply a mathematical composition of functions on a point
-   * @param {Array<function>} functions
-   * @param {object} point as { x, y }
-   */
-  function composeTransformations(functions, point) {
-    return functions
-      .reverse()
-      .reduce((acc, item) => item(acc), point)
-  }
-
-  function translate({a, b}, {x, y}) {
-
-    return { x: x + a, y: y + b }
-  }
-
-  function rotateFromO(angle, {x, y}) {
-    return {
-      x: x * Math.cos(angle) - y * Math.sin(angle),
-      y: x * Math.sin(angle) + y * Math.cos(angle)
-    }
   }
 
   /**
