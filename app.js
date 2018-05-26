@@ -6,16 +6,16 @@
     cy: 120
   }
 
-  const SVG_NS="http://www.w3.org/2000/svg"
+  const SVG_NS='http://www.w3.org/2000/svg'
   const box = document.querySelector('#box')
-  box.innerHTML = "hola"
+  box.innerHTML = 'hola'
   const appRoot = document.querySelector('#time-divider')
   const circle = createSvgElement('circle', {
     r: 100,
     cx: params.cx,
     cy: params.cy,
-    stroke: "red",
-    fill: "none"
+    stroke: 'red',
+    fill: 'none'
   })
 
   appRoot.appendChild(circle)
@@ -26,7 +26,6 @@
   // Create subdivisions
   for (let i = 1; i < params.subdivision; i++) {
     const rad = createRadiusByIndex(120, 20, i, params.subdivision)
-    console.log(rad)
     appRoot.appendChild(rad)
   }
 
@@ -62,7 +61,6 @@
    * @param {object} point as { x, y }
    */
   function composeTransformations(functions, point) {
-    console.log(functions)
     return functions
       .reverse()
       .reduce((acc, item) => item(acc), point)
@@ -98,10 +96,10 @@
 
   function createSvgElement(tag, attributes) {
     const svgElt = document.createElementNS(SVG_NS, tag)
-    for (key in attributes) {
-      svgElt.setAttribute(key, attributes[key]);
+    for (let key in attributes) {
+      svgElt.setAttribute(key, attributes[key])
     }
-    return svgElt;
+    return svgElt
   }
 
-})(window, document);
+})(window, document)
