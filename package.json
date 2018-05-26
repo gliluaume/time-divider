@@ -6,6 +6,25 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "gs",
+  "license": "ISC",
+  "directories": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gliluaume/time-divider.git"
+  },
+  "keywords": [
+    "svg",
+    "geometry",
+    "metronome"
+  ],
+  "bugs": {
+    "url": "https://github.com/gliluaume/time-divider/issues"
+  },
+  "homepage": "https://github.com/gliluaume/time-divider#readme",
+  "devDependencies": {
+    "jest": "^23.0.0"
+  }
 }
