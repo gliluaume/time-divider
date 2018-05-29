@@ -5,9 +5,11 @@
     rotateFromO,
     translate } = require('./modules/geometry')
   const params = {
-    subdivision: 7,
+    bpm: 30,
     cx: 120,
-    cy: 120
+    cy: 120,
+    hightlightClass: 'highlighted',
+    subdivision: 4,
   }
 
   const SVG_NS='http://www.w3.org/2000/svg'
@@ -31,6 +33,26 @@
   for (let i = 1; i < params.subdivision; i++) {
     const rad = createRadiusByIndex(120, 20, i, params.subdivision)
     appRoot.appendChild(rad)
+  }
+
+  // Create animation
+  const lines = appRoot.querySelectorAll('line')
+  var counter = 0;
+  const delay = calculateDelay(params.bpm, params.subdivision) * 1000
+  console.log(delay)
+  const loop = setInterval(() => {
+    counter = counter % params.subdivision
+    // javascript modulo sucks
+    const prev = (params.subdivision + counter - 1) % params.subdivision
+    lines[prev].setAttribute('class', '')
+    lines[counter].setAttribute('class', params.hightlightClass)
+    counter++;
+  }, delay)
+
+
+  function calculateDelay(bpm, sudivision = 4) {
+    const cycleDuration = 60 / bpm
+    return cycleDuration / sudivision
   }
 
   /**

@@ -1,3 +1,7 @@
 line {
   stroke-width: 1;
 }
+
+line.highlighted {
+  stroke-width: 4;
+}
